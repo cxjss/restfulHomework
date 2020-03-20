@@ -2,9 +2,12 @@ package com.cxj.restful.controller;
 
 import com.cxj.restful.domain.Task;
 import com.cxj.restful.service.ITaskService;
+import com.sun.deploy.net.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,8 +34,9 @@ public class TaskController {
      * @return
      */
     @PostMapping("/tasks")
-    public String insertTask(@RequestBody Task task) {
+    public String insertTask(@RequestBody Task task, HttpServletResponse response) {
         if (taskService.insertTask(task) == 0) {
+            response.setStatus(400);
             return "添加失败";
         }
         return "添加成功";
@@ -56,8 +60,9 @@ public class TaskController {
      * @return
      */
     @DeleteMapping("/tasks/{id}")
-    public String deleteTask(@PathVariable("id") Integer id) {
+    public String deleteTask(@PathVariable("id") Integer id, HttpServletResponse response) {
         if (taskService.deleteTask(id) == 0) {
+            response.setStatus(400);
             return "删除失败";
         }
         return "删除成功";
@@ -70,8 +75,9 @@ public class TaskController {
      * @return
      */
     @PutMapping("/tasks")
-    public String updateTask(@RequestBody Task task) {
+    public String updateTask(@RequestBody Task task, HttpServletResponse response) {
         if (taskService.updateTask(task) == 0) {
+            response.setStatus(400);
             return "修改失败";
         }
         return "修改成功";
