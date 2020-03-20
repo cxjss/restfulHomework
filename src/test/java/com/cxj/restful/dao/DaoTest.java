@@ -16,4 +16,17 @@ public class DaoTest {
             System.out.println(task);
         }
     }
+
+    @Test
+    public void testGetTaskById(){
+        ITaskDao taskDao = new TaskDaoImpl();
+        Task task = taskDao.getTaskById(3);
+        System.out.println(task);
+    }
+
+    @Test
+    public void testInsertTask(){
+        ITaskDao taskDao = new TaskDaoImpl();
+        taskDao.insertTask(new Task(3,"51,",""));
+    }
 }

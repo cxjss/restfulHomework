@@ -8,10 +8,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Repository;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.lang.annotation.Target;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -20,6 +17,16 @@ import java.util.List;
 public class TaskDaoImpl implements ITaskDao {
 
     private Resource resource = new ClassPathResource("static/data.json");
+
+    public void writeJson(String path, String str){
+        PrintStream stream=null;
+        try {
+            stream=new PrintStream(path);//写入的文件path
+            stream.print(str);//写入的字符串
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public List<Task> getTasks() {
@@ -43,11 +50,26 @@ public class TaskDaoImpl implements ITaskDao {
 
     @Override
     public int insertTask(Task task) {
-        return 0;
+        List<Task> list = getTasks();
+        for (Task originTask : list) {
+            if(originTask.getId() == task.getId()){
+                return 0;
+            }
+        }
+        list.add(task);
+        String res = JSON.toJSONString(list);
+        writeJson("src/main/resources/static/data.json",res);
+        return 1;
     }
 
     @Override
     public Task getTaskById(int id) {
+        List<Task> list = getTasks();
+        for (Task task : list) {
+            if(task.getId() == id){
+                return task;
+            }
+        }
         return null;
     }
 
